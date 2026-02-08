@@ -1,3 +1,6 @@
+"use client";
+
+import { login } from "@/lib/auth-actions";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,7 +13,8 @@ export default function Navbar(){
             </Link>
 
             <div className="flex items-center space-x-4">
-                <button className="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-sm">
+                <button className="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-sm" 
+                onClick={login}>
                     Войти
                 </button>
             </div>
