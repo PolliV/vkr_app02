@@ -8,6 +8,12 @@ export default function Navbar(){
                 <Image src={"/logo_app.png"} alt="logo" width={50} height={50}/>
                 <span className="text-2xl font-bold text-gray-800"> Квест Арзамас </span>
             </Link>
+
+            <div className="flex items-center space-x-4">
+                <button className="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-sm">
+                    Войти
+                </button>
+            </div>
         </div>
     </nav>
 }
