@@ -18,6 +18,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  gameSessions  GameSession[]
 }
 
 model Account {
@@ -55,4 +56,56 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model Quest {
+  id        String   @id @default(cuid())
+  title     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  steps     Step[]
+  runs      GameSession[]
+}
+
+model Step {
+  id         String   @id @default(cuid())
+  questId    String
+  order      Int
+  prompt     String
+  answerHash String
+  hint       String?
+  createdAt  DateTime @default(now())
+
+  quest      Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+  attempts   Attempt[]
+
+  @@unique([questId, order])
+}
+
+model GameSession {
+  id        String   @id @default(cuid())
+  questId   String
+  userId    String?  // опционально, чтобы MVP работал без auth
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quest     Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  attempts  Attempt[]
+}
+
+model Attempt {
+  id          String   @id @default(cuid())
+  gameSessionId String
+  stepId      String
+  answer      String
+  isCorrect   Boolean
+  createdAt   DateTime @default(now())
+
+  gameSession GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+  step        Step        @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([gameSessionId, stepId])
 }
